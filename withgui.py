@@ -69,7 +69,7 @@ class MainWindow(QMainWindow):
                 my_dict[compare_address] = self.get_distance(user_address, compare_address)
                 my_list.append(self.get_distance(user_address, compare_address))
             except Exception as e:
-                self.result_label.setText(str(e))
+                self.result_label.setText(f"{user_address} is not able to be checked it's latitude and longitude.")
                 return
 
         print(my_list)
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     sys.exit(app.exec_())
 
 
-# tkinter GUI
+## tkinter GUI
 # import tkinter as tk
 # from geopy.geocoders import Nominatim
 # from geopy.distance import geodesic
