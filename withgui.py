@@ -10,36 +10,40 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Closest Distance")
 
-        layout = QVBoxLayout()
+        self.layout = QVBoxLayout()
 
         self.label = QLabel("Reference Address:")
         self.reference_address = QLineEdit()
-        layout.addWidget(self.label)
-        layout.addWidget(self.reference_address)
+        self.layout.addWidget(self.label)
+        self.layout.addWidget(self.reference_address)
 
         self.label = QLabel("Number of Addresses to Compare:")
         self.num_compare_addresses = QLineEdit()
-        layout.addWidget(self.label)
-        layout.addWidget(self.num_compare_addresses)
+        self.layout.addWidget(self.label)
+        self.layout.addWidget(self.num_compare_addresses)
 
         self.entry_list = []
         for i in range(5):
             self.label = QLabel()
             self.label.setText(f"Address {i + 1}:")
             self.entry = QLineEdit()
-            layout.addWidget(self.label)
-            layout.addWidget(self.entry)
+            self.layout.addWidget(self.label)
+            self.layout.addWidget(self.entry)
             self.entry_list.append(self.entry)
 
         self.calculate_button = QPushButton("Calculate")
         self.calculate_button.clicked.connect(self.calculate)
-        layout.addWidget(self.calculate_button)
+        self.layout.addWidget(self.calculate_button)
+
+        self.clear_button = QPushButton("Reset")
+        self.clear_button.clicked.connect(self.clear)
+        self.layout.addWidget(self.clear_button)
 
         self.result_label = QLabel("Result will be displayed here.")
-        layout.addWidget(self.result_label)
+        self.layout.addWidget(self.result_label)
 
         widget = QWidget()
-        widget.setLayout(layout)
+        widget.setLayout(self.layout)
         self.setCentralWidget(widget)
 
     def location_(self, address):
@@ -51,6 +55,14 @@ class MainWindow(QMainWindow):
         first_loc = self.location_(address1)
         second_loc = self.location_(address2)
         return float(geodesic(first_loc, second_loc).miles)
+
+    def clear(self):
+        self.reference_address.setText('')
+        self.num_compare_addresses.setText('')
+        for entry in self.entry_list:
+            entry.setText("")
+
+        self.result_label.setText("Result will be displayed here.")
 
     def calculate(self):
         user_address = self.reference_address.text()
@@ -69,7 +81,7 @@ class MainWindow(QMainWindow):
                 my_dict[compare_address] = self.get_distance(user_address, compare_address)
                 my_list.append(self.get_distance(user_address, compare_address))
             except Exception as e:
-                self.result_label.setText(f"{user_address} is not able to be checked it's latitude and longitude.")
+                self.result_label.setText(f"{e}\n{compare_address} is not able to be checked it's latitude and longitude.")
                 return
 
         print(my_list)
